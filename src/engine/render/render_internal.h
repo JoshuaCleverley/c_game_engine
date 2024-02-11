@@ -3,7 +3,7 @@
 #include <SDL2/SDL.h>
 
 #include "../types.h"
-#include "render.h"
+#include "../render.h"
 
 typedef struct render_state_internal {
   u32 vao_quad;

@@ -2,9 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "../io.h"
 #include "../types.h"
 #include "../util.h"
-#include "io.h"
 
 #define IO_READ_CHUNK_SIZE 2097152
 #define IO_READ_ERROR_GENERAL "Error reading file: %s. errno: %d\n"

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "render/render.h"
+#include "render.h"
 
 typedef struct global {
   Render_State render;
