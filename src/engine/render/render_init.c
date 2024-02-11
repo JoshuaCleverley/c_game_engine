@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_video.h>
 #include <glad/glad.h>
 
 #include "../global.h"
@@ -7,13 +8,13 @@
 #include "render_internal.h"
 
 SDL_Window *render_init_window(u32 width, u32 height) {
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     ERROR_EXIT("SDL_Init error: %s\n", SDL_GetError());
   }
+
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 
   SDL_Window *window =
       SDL_CreateWindow("Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
@@ -27,7 +28,7 @@ SDL_Window *render_init_window(u32 width, u32 height) {
     ERROR_EXIT("Failed to initialize GLAD: %s\n", SDL_GetError());
   }
 
-  printf("OpenGL Loaded");
+  printf("OpenGL Loaded\n");
   printf("Vendor: %s\n", glGetString(GL_VENDOR));
   printf("Renderer: %s\n", glGetString(GL_RENDERER));
   printf("Version: %s\n", glGetString(GL_VERSION));
@@ -83,5 +84,20 @@ void render_init_quad(u32 *vao, u32 *vbo, u32 *ebo) {
   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(f32),
                         (void *)(3 * sizeof(f32)));
   glEnableVertexAttribArray(1);
+  glBindVertexArray(0);
+}
+
+void render_init_line(u32 *vao, u32 *vbo) {
+  glGenVertexArrays(1, vao);
+  glBindVertexArray(*vao);
+
+  glGenBuffers(1, vbo);
+  glBindBuffer(GL_ARRAY_BUFFER, *vbo);
+  glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(f32), NULL, GL_DYNAMIC_DRAW);
+
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(f32), NULL);
+  glEnableVertexAttribArray(0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+
   glBindVertexArray(0);
 }
