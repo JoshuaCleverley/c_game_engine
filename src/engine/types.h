@@ -1,6 +1,7 @@
 #pragma once
 
 #include <inttypes.h>
+#include <stddef.h>
 
 typedef uint8_t  u8;
 typedef uint16_t u16;
@@ -14,3 +15,5 @@ typedef int64_t i64;
 
 typedef float  f32;
 typedef double f64;
+
+typedef size_t usize;
