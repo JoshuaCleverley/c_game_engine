@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
 
     render_begin();
 
-    // render_quad(pos, (vec2){50, 50}, (vec4){0, 1, 0, 1});
+    render_quad(pos, (vec2){50, 50}, (vec4){0, 1, 0, 1});
     render_aabb((f32 *)&test_aabb, (vec4){1, 1, 1, 0.5});
 
     render_end();
