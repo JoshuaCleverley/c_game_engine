@@ -4,7 +4,7 @@
 #include "../arraylist.h"
 #include "../util.h"
 
-Array_List *create_array_list(usize item_size, usize initial_capacity) {
+Array_List *array_list_create(usize item_size, usize initial_capacity) {
   Array_List *list = malloc(sizeof(Array_List));
   if (!list)
     ERROR_RETURN(NULL, "Could not allocate memory for Array_List\n");
