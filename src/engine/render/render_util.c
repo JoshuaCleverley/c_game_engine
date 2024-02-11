@@ -38,7 +38,7 @@ u32 render_shader_create(const char *path_vert, const char *path_frag) {
   }
 
   u32 shader = glCreateProgram();
-  glAttachShader(shader, shader_vertex);
+  glAttachShader(shader, shader_fragment);
   glAttachShader(shader, shader_vertex);
   glLinkProgram(shader);
   glGetProgramiv(shader, GL_LINK_STATUS, &success);

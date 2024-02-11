@@ -1,9 +1,9 @@
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_error.h>
 #include <glad/glad.h>
 
 #include "../global.h"
 #include "../util.h"
+#include "render.h"
 #include "render_internal.h"
 
 SDL_Window *render_init_window(u32 width, u32 height) {
@@ -57,14 +57,10 @@ void render_init_color_texture(u32 *texture) {
 }
 
 void render_init_quad(u32 *vao, u32 *vbo, u32 *ebo) {
-  f32 vertices[] = {
-      0.5,  0.5,  0, 0, 0, 0.5,  -0.5, 0, 0, 1,
-      -0.5, -0.5, 0, 1, 1, -0.5, 0.5,  0, 1, 0,
-  };
+  f32 vertices[] = {0.5,  0.5,  0, 0, 0, 0.5,  -0.5, 0, 0, 1,
+                    -0.5, -0.5, 0, 1, 1, -0.5, 0.5,  0, 1, 0};
 
-  u32 indices[] = {
-      0, 1, 3, 1, 2, 3,
-  };
+  u32 indices[] = {0, 1, 3, 1, 2, 3};
 
   glGenVertexArrays(1, vao);
   glGenBuffers(1, vbo);
@@ -76,7 +72,8 @@ void render_init_quad(u32 *vao, u32 *vbo, u32 *ebo) {
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *ebo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
+               GL_STATIC_DRAW);
 
   // xyz
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(f32), NULL);
