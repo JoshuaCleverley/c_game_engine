@@ -14,7 +14,7 @@ File io_file_read(const char *path) {
   File file = {.is_valid = false};
   FILE *fp = fopen(path, "rb");
 
-  if (ferror(fp)) {
+  if (!fp || ferror(fp)) {
     ERROR_RETURN(file, IO_READ_ERROR_GENERAL, path, errno);
   }
 
