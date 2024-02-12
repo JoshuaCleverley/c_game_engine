@@ -77,9 +77,9 @@ int main(int argc, char *argv[]) {
     render_aabb((f32 *)&cursor_aabb, WHITE);
 
     if (physics_point_intersect_aabb(pos, test_aabb))
-      render_quad(pos, (vec2){10, 10}, RED);
+      render_quad(pos, (vec2){5, 5}, RED);
     else
-      render_quad(pos, (vec2){10, 10}, GREEN);
+      render_quad(pos, (vec2){5, 5}, WHITE);
 
     render_end();
     time_update_late();

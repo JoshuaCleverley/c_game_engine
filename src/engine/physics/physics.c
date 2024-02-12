@@ -55,3 +55,7 @@ usize physics_body_create(vec2 position, vec2 size) {
 Body *physics_body_get(usize index) {
   return array_list_get(state.body_list, index);
 }
+
+bool physics_aabb_intersect_aabb(AABB a, AABB b);
+AABB aabb_minkowski_difference(AABB a, AABB b);
+void aabb_penetration_vector(vec2 r, AABB aabb);
