@@ -13,7 +13,13 @@ void aabb_min_max(vec2 min, vec2 max, AABB aabb) {
   vec2_add(max, aabb.position, aabb.half_size);
 }
 
-bool physics_aabb_intersect_aabb(AABB a, AABB b);
+bool physics_aabb_intersect_aabb(AABB a, AABB b) {
+  vec2 min, max;
+
+  aabb_min_max(min, max, aabb_minkowski_difference(a, b));
+
+  return (min[0] <= 0 && max[0] >= 0) && (min[1] <= 0 && max[1] >= 0);
+}
 
 AABB aabb_minkowski_difference(AABB a, AABB b) {
   AABB result;
