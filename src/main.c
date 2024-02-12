@@ -1,3 +1,4 @@
+#include "engine/render.h"
 #include <glad/glad.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -41,6 +42,13 @@ int main(int argc, char *argv[]) {
       .half_size = {50, 50},
   };
 
+  AABB cursor_aabb = {.half_size = {75, 76}};
+  AABB sum_aabb = {
+      .position = {test_aabb.position[0], test_aabb.position[1]},
+      .half_size = {test_aabb.half_size[0] + cursor_aabb.half_size[0],
+                    test_aabb.half_size[1] + cursor_aabb.half_size[1]},
+  };
+
   while (running) {
     time_update();
     SDL_Event event;
@@ -61,8 +69,12 @@ int main(int argc, char *argv[]) {
 
     render_begin();
 
-    // render_quad(pos, (vec2){50, 50}, (vec4){0, 1, 0, 1});
-    render_aabb((f32 *)&test_aabb, (vec4){1, 1, 1, 0.5});
+    cursor_aabb.position[0] = pos[0];
+    cursor_aabb.position[1] = pos[1];
+
+    render_aabb((f32 *)&test_aabb, WHITE);
+    render_aabb((f32 *)&sum_aabb, WHITE);
+    render_aabb((f32 *)&cursor_aabb, WHITE);
 
     if (physics_point_intersect_aabb(pos, test_aabb))
       render_quad(pos, (vec2){10, 10}, RED);
