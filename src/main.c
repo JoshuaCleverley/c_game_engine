@@ -75,6 +75,8 @@ int main(int argc, char *argv[]) {
     render_aabb((f32 *)&test_aabb, WHITE);
     render_aabb((f32 *)&sum_aabb, WHITE);
     render_aabb((f32 *)&cursor_aabb, WHITE);
+    AABB minkowskidiff = aabb_minkowski_difference(test_aabb, cursor_aabb);
+    render_aabb((f32 *)&minkowskidiff, BLUE);
 
     if (physics_point_intersect_aabb(pos, test_aabb))
       render_quad(pos, (vec2){5, 5}, RED);

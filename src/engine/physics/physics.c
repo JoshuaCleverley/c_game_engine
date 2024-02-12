@@ -13,6 +13,19 @@ void aabb_min_max(vec2 min, vec2 max, AABB aabb) {
   vec2_add(max, aabb.position, aabb.half_size);
 }
 
+bool physics_aabb_intersect_aabb(AABB a, AABB b);
+
+AABB aabb_minkowski_difference(AABB a, AABB b) {
+  AABB result;
+
+  vec2_sub(result.position, a.position, b.position);
+  vec2_add(result.half_size, a.half_size, b.half_size);
+
+  return result;
+}
+
+void aabb_penetration_vector(vec2 r, AABB aabb);
+
 bool physics_point_intersect_aabb(vec2 point, AABB aabb) {
   vec2 min, max;
   aabb_min_max(min, max, aabb);
@@ -55,7 +68,3 @@ usize physics_body_create(vec2 position, vec2 size) {
 Body *physics_body_get(usize index) {
   return array_list_get(state.body_list, index);
 }
-
-bool physics_aabb_intersect_aabb(AABB a, AABB b);
-AABB aabb_minkowski_difference(AABB a, AABB b);
-void aabb_penetration_vector(vec2 r, AABB aabb);
