@@ -1,4 +1,5 @@
 #include "engine/render.h"
+#include <SDL2/SDL_events.h>
 #include <glad/glad.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -42,12 +43,13 @@ int main(int argc, char *argv[]) {
       .half_size = {50, 50},
   };
 
-  AABB cursor_aabb = {.half_size = {75, 76}};
+  AABB cursor_aabb = {.half_size = {75, 75}};
   AABB sum_aabb = {
       .position = {test_aabb.position[0], test_aabb.position[1]},
       .half_size = {test_aabb.half_size[0] + cursor_aabb.half_size[0],
                     test_aabb.half_size[1] + cursor_aabb.half_size[1]},
   };
+  AABB start_aabb = {.half_size = {75, 75}};
 
   while (running) {
     time_update();
@@ -57,6 +59,12 @@ int main(int argc, char *argv[]) {
       switch (event.type) {
       case SDL_QUIT:
         running = false;
+        break;
+      case SDL_MOUSEBUTTONDOWN:
+        if (event.button.button == SDL_BUTTON_LEFT) {
+          start_aabb.position[0] = pos[0];
+          start_aabb.position[1] = pos[1];
+        }
         break;
       default:
         break;
@@ -73,33 +81,59 @@ int main(int argc, char *argv[]) {
     cursor_aabb.position[1] = pos[1];
 
     render_aabb((f32 *)&test_aabb, WHITE);
-    render_aabb((f32 *)&sum_aabb, WHITE);
 
-    // Test minkowski difference
-    AABB minkowski_diff = aabb_minkowski_difference(test_aabb, cursor_aabb);
-    render_aabb((f32 *)&minkowski_diff, BLUE);
-
-    vec2 pv;
-    aabb_penetration_vector(pv, minkowski_diff);
-
-    AABB collision_aabb = cursor_aabb;
-    collision_aabb.position[0] += pv[0];
-    collision_aabb.position[1] += pv[1];
+    vec4 faded = {1, 1, 1, 0.3};
 
     if (physics_aabb_intersect_aabb(test_aabb, cursor_aabb)) {
       render_aabb((f32 *)&cursor_aabb, RED);
-      render_aabb((f32 *)&collision_aabb, CYAN);
-
-      vec2_add(pv, pos, pv);
-      render_line_segment(pos, pv, CYAN);
     } else {
       render_aabb((f32 *)&cursor_aabb, WHITE);
     }
 
-    if (physics_point_intersect_aabb(pos, test_aabb))
-      render_quad(pos, (vec2){5, 5}, RED);
-    else
-      render_quad(pos, (vec2){5, 5}, WHITE);
+    render_aabb((f32 *)&start_aabb, faded);
+    render_line_segment(start_aabb.position, pos, faded);
+
+    f32 x = sum_aabb.position[0];
+    f32 y = sum_aabb.position[1];
+    f32 size = sum_aabb.half_size[0];
+
+    render_line_segment((vec2){x - size, 0},
+                        (vec2){x - size, global.render.height}, faded);
+    render_line_segment((vec2){x + size, 0},
+                        (vec2){x + size, global.render.height}, faded);
+    render_line_segment((vec2){0, y - size},
+                        (vec2){global.render.width, y - size}, faded);
+    render_line_segment((vec2){0, y + size},
+                        (vec2){global.render.width, y + size}, faded);
+
+    vec2 min, max;
+    aabb_min_max(min, max, sum_aabb);
+
+    vec2 magnitude;
+    vec2_sub(magnitude, pos, start_aabb.position);
+
+    for (u8 i = 0; i < 2; i++) {
+      if (magnitude[i] != 0) {
+        f32 t1 = (min[i] - pos[i]) / magnitude[i];
+        f32 t2 = (max[i] - pos[i]) / magnitude[i];
+
+        vec2 point;
+        vec2_scale(point, magnitude, t1);
+        vec2_add(point, point, pos);
+
+        if (min[i] < start_aabb.position[i])
+          render_quad(point, (vec2){5, 5}, ORANGE);
+        else
+          render_quad(point, (vec2){5, 5}, CYAN);
+
+        vec2_scale(point, magnitude, t2);
+        vec2_add(point, point, pos);
+        if (max[i] < start_aabb.position[i])
+          render_quad(point, (vec2){5, 5}, ORANGE);
+        else
+          render_quad(point, (vec2){5, 5}, CYAN);
+      }
+    }
 
     render_end();
     time_update_late();

@@ -16,9 +16,9 @@ SDL_Window *render_init_window(u32 width, u32 height) {
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 
-  SDL_Window *window =
-      SDL_CreateWindow("Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                       800, 600, SDL_WINDOW_OPENGL);
+  SDL_Window *window = SDL_CreateWindow(
+      "Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+      global.render.width, global.render.height, SDL_WINDOW_OPENGL);
   if (!window) {
     ERROR_EXIT("SDL_CreateWindow Error: %s\n", SDL_GetError());
   }

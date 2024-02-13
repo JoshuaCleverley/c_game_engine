@@ -99,3 +99,5 @@ usize physics_body_create(vec2 position, vec2 size) {
 Body *physics_body_get(usize index) {
   return array_list_get(state.body_list, index);
 }
+
+Hit ray_intersect_aabb(vec2 position, vec2 magnitude, AABB aabb);
