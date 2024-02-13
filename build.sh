@@ -11,4 +11,4 @@ files="$main $deps $io $render $config $input $time $arraylist $physics"
 
 libs="-lGL -lSDL2-2.0 -lSDL2_mixer -Ideps/include/linmath"
 
-gcc -o game $files -Ideps/include -lm -Llib $libs
+gcc -o game $files -Ideps/include -lm -Llib $libs -g
