@@ -112,6 +112,18 @@ int main(int argc, char *argv[]) {
     vec2 magnitude;
     vec2_sub(magnitude, pos, start_aabb.position);
 
+    Hit hit = ray_intersect_aabb(start_aabb.position, magnitude, sum_aabb);
+
+    if (hit.is_hit) {
+      AABB hit_aabb = {
+          .position = {hit.position[0], hit.position[1]},
+          .half_size = {start_aabb.half_size[0], start_aabb.half_size[1]},
+      };
+
+      render_aabb((f32 *)&hit_aabb, CYAN);
+      render_quad(hit.position, (vec2){5, 5}, CYAN);
+    }
+
     for (u8 i = 0; i < 2; i++) {
       if (magnitude[i] != 0) {
         f32 t1 = (min[i] - pos[i]) / magnitude[i];

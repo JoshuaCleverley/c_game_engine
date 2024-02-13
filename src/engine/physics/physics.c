@@ -14,6 +14,38 @@ void aabb_min_max(vec2 min, vec2 max, AABB aabb) {
   vec2_add(max, aabb.position, aabb.half_size);
 }
 
+Hit ray_intersect_aabb(vec2 position, vec2 magnitude, AABB aabb) {
+  Hit hit = {0};
+
+  vec2 min, max;
+  aabb_min_max(min, max, aabb);
+
+  f32 last_entry = -INFINITY;
+  f32 first_exit = INFINITY;
+
+  for (u8 i = 0; i < 2; i++) {
+    if (magnitude[i] != 0) {
+      f32 t1 = (min[i] - position[i]) / magnitude[i];
+      f32 t2 = (max[i] - position[i]) / magnitude[i];
+
+      last_entry = fmaxf(last_entry, fminf(t1, t2));
+      first_exit = fminf(first_exit, fmaxf(t1, t2));
+    } else if (position[i] <= min[i] || position[i] >= max[i]) {
+      return hit;
+    }
+  }
+
+  if (first_exit > last_entry && first_exit > 0 && last_entry < 1) {
+    hit.position[0] = position[0] + magnitude[0] * last_entry;
+    hit.position[1] = position[1] + magnitude[1] * last_entry;
+
+    hit.is_hit = true;
+    hit.time = last_entry;
+  }
+
+  return hit;
+}
+
 bool physics_aabb_intersect_aabb(AABB a, AABB b) {
   vec2 min, max;
 
@@ -99,5 +131,3 @@ usize physics_body_create(vec2 position, vec2 size) {
 Body *physics_body_get(usize index) {
   return array_list_get(state.body_list, index);
 }
-
-Hit ray_intersect_aabb(vec2 position, vec2 magnitude, AABB aabb);
